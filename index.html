@@ -8,34 +8,67 @@
 </head>
 <body>
   <canvas id="game"></canvas>
-  <div id="overlay">
-    <div id="hud">
-      <div class="hud-top">
-        <div class="hud-box"><span id="type">🚗 Carro</span></div>
-        <div class="hud-box">⏱️ <span id="time">00:00.0</span></div>
-        <div class="hud-box">🏁 <span id="lap">0</span>/3</div>
+
+  <!-- MENU INICIAL -->
+  <div id="menu" class="screen active">
+    <h1>🏁 CORRIDA WEB</h1>
+    <div class="form-group">
+      <label for="playerName">Seu Nome:</label>
+      <input type="text" id="playerName" maxlength="15" placeholder="Ex: PilotX" autocomplete="off">
+    </div>
+    <button id="startBtn">🚀 INICIAR CORRIDA</button>
+    <div class="leaderboard-box">
+      <h3>🏆 TOP 5 MELHORES</h3>
+      <table id="leaderboardTable">
+        <thead><tr><th>#</th><th>Nome</th><th>Veículo</th><th>Tempo</th></tr></thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
+    </div>
+    <p class="hint">WASD / Setas | Espaço = Freio de Mão | T = Trocar Veículo</p>
+  </div>
+
+  <!-- HUD DO JOGO -->
+  <div id="hud" class="screen hidden">
+    <div class="hud-top">
+      <div class="hud-box">👤 <span id="hudName">Jogador</span></div>
+      <div class="hud-box">⏱️ <span id="time">00:00.0</span></div>
+      <div class="hud-box">🏁 <span id="lap">0</span>/3</div>
+    </div>
+    <div class="hud-mid">
+      <div class="gauge">
+        <div class="gauge-label">RPM</div>
+        <div class="gauge-bar"><div id="rpmBar"></div></div>
+        <div class="gauge-label">Marcha: <span id="gear">N</span></div>
       </div>
-      <div class="hud-mid">
-        <div class="gauge">
-          <div class="gauge-label">RPM</div>
-          <div class="gauge-bar"><div id="rpmBar"></div></div>
-          <div class="gauge-label">Marcha: <span id="gear">N</span></div>
-        </div>
-        <div class="gauge">
-          <div class="gauge-label">Velocidade</div>
-          <div class="speed-val"><span id="speed">0</span> <small>km/h</small></div>
-        </div>
-        <div class="gauge">
-          <div class="gauge-label">Força G</div>
-          <div class="gauge-bar"><div id="gBar"></div></div>
-        </div>
+      <div class="gauge">
+        <div class="gauge-label">Velocidade</div>
+        <div class="speed-val"><span id="speed">0</span> <small>km/h</small></div>
       </div>
-      <div class="hud-bottom">
-        <button id="startBtn">🔑 LIGAR MOTOR</button>
-        <div id="controls">WASD / Setas | Espaço = Freio de Mão</div>
+      <div class="gauge">
+        <div class="gauge-label">Força G</div>
+        <div class="gauge-bar"><div id="gBar"></div></div>
       </div>
     </div>
+    <div class="hud-bottom">
+      <div class="vehicle-indicator"><span id="vehicleType">🚗 Carro</span></div>
+      <div id="controls">WASD / Setas | Espaço = Freio de Mão</div>
+    </div>
   </div>
+
+  <!-- TELA DE FIM DE JOGO -->
+  <div id="gameOver" class="screen hidden">
+    <h2>🏁 CORRIDA FINALIZADA!</h2>
+    <div class="result-card">
+      <p>Tempo: <span id="finalTime">00:00.0</span></p>
+      <p>Veículo: <span id="finalVehicle">Carro</span></p>
+      <p id="recordMsg"></p>
+    </div>
+    <div class="btn-group">
+      <button id="restartBtn">🔄 CORRER NOVAMENTE</button>
+      <button id="menuBtn">📋 VER CLASSIFICAÇÃO</button>
+    </div>
+  </div>
+
   <script src="index.js"></script>
 </body>
 </html>
