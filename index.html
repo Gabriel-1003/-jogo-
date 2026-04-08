@@ -9,35 +9,39 @@
 <body>
   <canvas id="game"></canvas>
 
-  <!-- MENU INICIAL -->
+  <!-- MENU -->
   <div id="menu" class="screen active">
     <h1>🏁 CORRIDA WEB</h1>
+    <div class="coins-display">💰 <span id="menuCoins">0</span></div>
     <div class="form-group">
       <label for="playerName">Seu Nome:</label>
       <input type="text" id="playerName" maxlength="15" placeholder="Ex: PilotX" autocomplete="off">
     </div>
-    <button id="startBtn">🚀 INICIAR CORRIDA</button>
+    <div class="btn-group">
+      <button id="startBtn">🚀 INICIAR CORRIDA</button>
+      <button id="shopBtn">🛒 LOJA</button>
+    </div>
     <div class="leaderboard-box">
-      <h3>🏆 TOP 5 MELHORES</h3>
+      <h3>🏆 TOP 5</h3>
       <table id="leaderboardTable">
-        <thead><tr><th>#</th><th>Nome</th><th>Veículo</th><th>Tempo</th></tr></thead>
+        <thead><tr><th>#</th><th>Nome</th><th>Tempo</th></tr></thead>
         <tbody id="leaderboardBody"></tbody>
       </table>
     </div>
-    <p class="hint">WASD / Setas | Espaço = Freio de Mão | T = Trocar Veículo</p>
+    <p class="hint">WASD / Setas | Espaço = Freio de Mão | Shift = Nitro | T = Trocar Veículo</p>
   </div>
 
-  <!-- HUD DO JOGO -->
+  <!-- HUD -->
   <div id="hud" class="screen hidden">
     <div class="hud-top">
       <div class="hud-box">👤 <span id="hudName">Jogador</span></div>
+      <div class="hud-box">💰 <span id="hudCoins">0</span></div>
       <div class="hud-box">⏱️ <span id="time">00:00.0</span></div>
       <div class="hud-box">🏁 <span id="lap">0</span>/3</div>
     </div>
     <div class="hud-mid">
       <div class="gauge">
-        <div class="gauge-label">RPM</div>
-        <div class="gauge-bar"><div id="rpmBar"></div></div>
+        <div class="gauge-label">RPM</div><div class="gauge-bar"><div id="rpmBar"></div></div>
         <div class="gauge-label">Marcha: <span id="gear">N</span></div>
       </div>
       <div class="gauge">
@@ -45,27 +49,55 @@
         <div class="speed-val"><span id="speed">0</span> <small>km/h</small></div>
       </div>
       <div class="gauge">
-        <div class="gauge-label">Força G</div>
-        <div class="gauge-bar"><div id="gBar"></div></div>
+        <div class="gauge-label">Nitro 🔥</div>
+        <div class="nitro-bar"><div id="nitroBar"></div></div>
+        <div class="gauge-label">Usos: <span id="nitroCount">0</span></div>
       </div>
     </div>
     <div class="hud-bottom">
       <div class="vehicle-indicator"><span id="vehicleType">🚗 Carro</span></div>
-      <div id="controls">WASD / Setas | Espaço = Freio de Mão</div>
+      <div id="controls">Shift = Ativar Nitro</div>
     </div>
   </div>
 
-  <!-- TELA DE FIM DE JOGO -->
+  <!-- LOJA -->
+  <div id="shop" class="screen hidden">
+    <h2>🛒 LOJA</h2>
+    <div class="shop-tabs">
+      <button class="tab active" data-tab="skins">🎨 Skins</button>
+      <button class="tab" data-tab="nitro">🔥 Nitro</button>
+    </div>
+    <div id="shopCoins">💰 <span id="shopCoinsVal">0</span></div>
+    
+    <div id="skinsPanel" class="shop-panel active">
+      <div class="skin-grid" id="skinGrid"></div>
+    </div>
+    <div id="nitroPanel" class="shop-panel hidden">
+      <div class="nitro-shop-card">
+        <h3>🔥 Pacote Nitro (x3)</h3>
+        <p>Ative com <b>Shift</b> para ganhar +40% de velocidade por 2.5s.</p>
+        <div class="price">300 💰</div>
+        <button id="buyNitro">COMPRAR</button>
+      </div>
+    </div>
+    <button id="closeShop">↩️ VOLTAR</button>
+  </div>
+
+  <!-- FIM DE JOGO -->
   <div id="gameOver" class="screen hidden">
     <h2>🏁 CORRIDA FINALIZADA!</h2>
     <div class="result-card">
       <p>Tempo: <span id="finalTime">00:00.0</span></p>
       <p>Veículo: <span id="finalVehicle">Carro</span></p>
-      <p id="recordMsg"></p>
+      <div id="rewards">
+        <p>💰 Base: <span id="rewardBase">0</span></p>
+        <p>🎯 Bônus: <span id="rewardBonus">0</span></p>
+        <p class="total">💵 Total: <span id="rewardTotal">0</span></p>
+      </div>
     </div>
     <div class="btn-group">
       <button id="restartBtn">🔄 CORRER NOVAMENTE</button>
-      <button id="menuBtn">📋 VER CLASSIFICAÇÃO</button>
+      <button id="menuBtn">📋 MENU</button>
     </div>
   </div>
 

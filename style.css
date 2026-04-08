@@ -11,7 +11,8 @@ canvas { display: block; position: fixed; inset: 0; z-index: 0; }
 .hidden { opacity: 0; pointer-events: none; transform: scale(0.98); }
 .active { opacity: 1; pointer-events: auto; transform: scale(1); }
 
-h1 { font-size: 2.5rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #22c55e, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h1, h2 { margin-bottom: 1rem; background: linear-gradient(135deg, #22c55e, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.coins-display { font-size: 1.4rem; margin-bottom: 1rem; color: #fbbf24; font-weight: 700; }
 .form-group { margin-bottom: 1rem; text-align: center; }
 input {
   padding: 12px 16px; font-size: 1.1rem; border: 2px solid #333; border-radius: 8px;
@@ -20,42 +21,70 @@ input {
 input:focus { border-color: #22c55e; }
 
 button {
-  padding: 12px 24px; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px;
-  cursor: pointer; transition: all 0.2s; margin: 8px 4px;
+  padding: 10px 18px; font-size: 0.95rem; font-weight: 600; border: none; border-radius: 8px;
+  cursor: pointer; transition: all 0.2s; margin: 6px;
 }
-#startBtn { background: #22c55e; color: #000; }
-#startBtn:hover { background: #16a34a; transform: translateY(-2px); }
-#restartBtn { background: #0ea5e9; color: #fff; }
-#restartBtn:hover { background: #0284c7; }
-#menuBtn { background: #333; color: #fff; }
-#menuBtn:hover { background: #444; }
+#startBtn, #buyNitro { background: #22c55e; color: #000; }
+#startBtn:hover, #buyNitro:hover { background: #16a34a; transform: translateY(-2px); }
+#shopBtn, #restartBtn { background: #0ea5e9; color: #fff; }
+#shopBtn:hover, #restartBtn:hover { background: #0284c7; }
+#closeShop, #menuBtn { background: #333; color: #fff; }
+#closeShop:hover, #menuBtn:hover { background: #444; }
+.tab { background: #222; color: #aaa; }
+.tab.active { background: #22c55e; color: #000; }
 
-.leaderboard-box {
-  margin-top: 1.5rem; background: rgba(20,20,25,0.8); padding: 16px; border-radius: 10px;
-  border: 1px solid #222; min-width: 320px;
-}
+.leaderboard-box { margin-top: 1rem; background: rgba(20,20,25,0.8); padding: 16px; border-radius: 10px; border: 1px solid #222; min-width: 280px; }
 table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 8px; text-align: left; border-bottom: 1px solid #333; font-size: 0.95rem; }
-th { color: #888; }
-tr:nth-child(1) td { color: #fbbf24; } /* Ouro */
-tr:nth-child(2) td { color: #94a3b8; } /* Prata */
-tr:nth-child(3) td { color: #b45309; } /* Bronze */
+th, td { padding: 6px; text-align: left; border-bottom: 1px solid #333; font-size: 0.9rem; }
+tr:nth-child(1) td { color: #fbbf24; }
+tr:nth-child(2) td { color: #94a3b8; }
+tr:nth-child(3) td { color: #b45309; }
 
-.hint { margin-top: 1rem; color: #666; font-size: 0.85rem; }
+/* HUD */
+#hud { pointer-events: none; background: none; backdrop-filter: none; justify-content: flex-end; padding: 16px; }
+.hud-top, .hud-mid, .hud-bottom { display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; }
+.hud-top, .hud-bottom { margin-bottom: 6px; gap: 8px; }
+.hud-box { font-size: 13px; background: rgba(0,0,0,0.7); padding: 6px 10px; border-radius: 6px; }
+.gauge { width: 30%; min-width: 90px; }
+.gauge-label { font-size: 10px; color: #aaa; margin-bottom: 3px; text-align: center; }
+.gauge-bar, .nitro-bar { height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-bottom: 3px; }
+.gauge-bar > div, .nitro-bar > div { height: 100%; width: 0%; transition: width 0.1s; }
+.gauge-bar > div { background: #22c55e; }
+.nitro-bar > div { background: linear-gradient(90deg, #f97316, #ef4444); }
+.speed-val { font-size: 24px; font-weight: 700; line-height: 1; text-align: center; }
+.speed-val small { font-size: 10px; color: #888; }
+.vehicle-indicator { background: rgba(0,0,0,0.7); padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+
+/* LOJA */
+#shop { padding: 20px; }
+.shop-tabs { display: flex; gap: 10px; margin-bottom: 10px; }
+#shopCoins { font-size: 1.2rem; color: #fbbf24; margin-bottom: 15px; }
+.shop-panel { display: none; width: 100%; max-width: 500px; }
+.shop-panel.active { display: block; }
+.skin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; }
+.skin-card {
+  background: #15151a; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #333;
+  cursor: pointer; transition: all 0.2s;
+}
+.skin-card:hover { transform: translateY(-3px); border-color: #22c55e; }
+.skin-card.owned { border-color: #22c55e; background: #0a1a0a; }
+.skin-card.selected { box-shadow: 0 0 0 2px #22c55e; }
+.skin-preview { width: 40px; height: 60px; margin: 0 auto 8px; border-radius: 6px; }
+.skin-name { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+.skin-price { font-size: 11px; color: #aaa; }
+.skin-card button { width: 100%; padding: 6px; font-size: 11px; margin-top: 6px; }
+.buy-btn { background: #22c55e; color: #000; }
+.buy-btn:disabled { background: #444; color: #777; cursor: not-allowed; }
+.equip-btn { background: #0ea5e9; color: #fff; }
+
+.nitro-shop-card {
+  background: #15151a; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #333;
+  max-width: 300px; margin: 0 auto;
+}
+.price { font-size: 1.3rem; color: #fbbf24; margin: 10px 0; font-weight: 700; }
+
+/* RESULTADO */
 .result-card { background: #111; padding: 20px; border-radius: 10px; margin-bottom: 1rem; min-width: 280px; text-align: center; border: 1px solid #222; }
-.result-card p { font-size: 1.1rem; margin: 6px 0; }
-#recordMsg { color: #22c55e; font-weight: 600; margin-top: 10px; }
-
-/* HUD (já otimizado) */
-#hud { pointer-events: none; background: none; backdrop-filter: none; justify-content: flex-end; padding: 20px; }
-.hud-top, .hud-mid, .hud-bottom { display: flex; justify-content: space-around; align-items: center; }
-.hud-top, .hud-bottom { margin-bottom: 8px; }
-.hud-box { font-size: 14px; background: rgba(0,0,0,0.6); padding: 6px 10px; border-radius: 6px; }
-.gauge { width: 30%; }
-.gauge-label { font-size: 11px; color: #aaa; margin-bottom: 4px; text-align: center; }
-.gauge-bar { height: 8px; background: #333; border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
-.gauge-bar > div { height: 100%; background: #22c55e; width: 0%; transition: width 0.1s; }
-.speed-val { font-size: 28px; font-weight: 700; line-height: 1; text-align: center; }
-.speed-val small { font-size: 12px; color: #888; font-weight: 400; }
-.vehicle-indicator { background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; font-size: 13px; }
-#controls { font-size: 11px; color: #555; text-align: center; margin-top: 4px; }
+.result-card p { font-size: 1rem; margin: 6px 0; }
+.total { color: #fbbf24; font-weight: 700; font-size: 1.1rem; margin-top: 8px; }
+.hint { margin-top: 0.8rem; color: #666; font-size: 0.85rem; }
