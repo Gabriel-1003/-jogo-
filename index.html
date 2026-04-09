@@ -2,33 +2,50 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Corrida Realista Web</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <canvas id="game"></canvas>
 
+  <!-- TOAST NOTIFICAÇÃO -->
+  <div id="toast" class="toast hidden">🏆 <span id="toastText"></span></div>
+
+  <!-- CONTROLES MOBILE -->
+  <div id="mobileControls" class="hidden">
+    <div id="joystickArea"><div id="joystickKnob"></div></div>
+    <div class="mobile-btns">
+      <button id="btnBrake">🛑</button>
+      <button id="btnNitro">🔥</button>
+      <button id="btnHandbrake">⛓️</button>
+    </div>
+  </div>
+
   <!-- MENU -->
   <div id="menu" class="screen active">
     <h1>🏁 CORRIDA WEB</h1>
     <div class="coins-display">💰 <span id="menuCoins">0</span></div>
     <div class="form-group">
-      <label for="playerName">Seu Nome:</label>
-      <input type="text" id="playerName" maxlength="15" placeholder="Ex: PilotX" autocomplete="off">
+      <label>Seu Nome:</label>
+      <input type="text" id="playerName" maxlength="15" placeholder="PilotX" autocomplete="off">
     </div>
+    
+    <div class="options-row">
+      <select id="mapSelect"></select>
+      <label class="toggle"><input type="checkbox" id="timeAttackToggle"> ⏱️ Time Attack</label>
+    </div>
+    
     <div class="btn-group">
-      <button id="startBtn">🚀 INICIAR CORRIDA</button>
+      <button id="startBtn">🚀 CORRER</button>
       <button id="shopBtn">🛒 LOJA</button>
+      <button id="achieveBtn">🏆 CONQUISTAS</button>
     </div>
     <div class="leaderboard-box">
       <h3>🏆 TOP 5</h3>
-      <table id="leaderboardTable">
-        <thead><tr><th>#</th><th>Nome</th><th>Tempo</th></tr></thead>
-        <tbody id="leaderboardBody"></tbody>
-      </table>
+      <table id="leaderboardTable"><thead><tr><th>#</th><th>Nome</th><th>Tempo</th></tr></thead><tbody id="leaderboardBody"></tbody></table>
     </div>
-    <p class="hint">WASD / Setas | Espaço = Freio de Mão | Shift = Nitro | T = Trocar Veículo</p>
+    <p class="hint">PC: WASD/Setas | Espaço | Shift | T<br>Mobile: Joystick + Botões</p>
   </div>
 
   <!-- HUD -->
@@ -36,51 +53,32 @@
     <div class="hud-top">
       <div class="hud-box">👤 <span id="hudName">Jogador</span></div>
       <div class="hud-box">💰 <span id="hudCoins">0</span></div>
-      <div class="hud-box">⏱️ <span id="time">00:00.0</span></div>
-      <div class="hud-box">🏁 <span id="lap">0</span>/3</div>
+      <div class="hud-box">🏁 <span id="lap">0</span>/<span id="totalLaps">3</span></div>
     </div>
     <div class="hud-mid">
-      <div class="gauge">
-        <div class="gauge-label">RPM</div><div class="gauge-bar"><div id="rpmBar"></div></div>
-        <div class="gauge-label">Marcha: <span id="gear">N</span></div>
-      </div>
-      <div class="gauge">
-        <div class="gauge-label">Velocidade</div>
-        <div class="speed-val"><span id="speed">0</span> <small>km/h</small></div>
-      </div>
-      <div class="gauge">
-        <div class="gauge-label">Nitro 🔥</div>
-        <div class="nitro-bar"><div id="nitroBar"></div></div>
-        <div class="gauge-label">Usos: <span id="nitroCount">0</span></div>
-      </div>
+      <div class="gauge"><div class="gauge-label">Velocidade</div><div class="speed-val"><span id="speed">0</span><small>km/h</small></div></div>
+      <div class="gauge"><div class="gauge-label">Nitro</div><div class="nitro-bar"><div id="nitroBar"></div></div><div class="gauge-label">x<span id="nitroCount">0</span></div></div>
     </div>
-    <div class="hud-bottom">
-      <div class="vehicle-indicator"><span id="vehicleType">🚗 Carro</span></div>
-      <div id="controls">Shift = Ativar Nitro</div>
-    </div>
+    <div id="ghostIndicator" class="hidden">👻 Alvo: <span id="ghostDiff">0.0</span>s</div>
   </div>
 
   <!-- LOJA -->
   <div id="shop" class="screen hidden">
     <h2>🛒 LOJA</h2>
-    <div class="shop-tabs">
-      <button class="tab active" data-tab="skins">🎨 Skins</button>
-      <button class="tab" data-tab="nitro">🔥 Nitro</button>
-    </div>
+    <div class="shop-tabs"><button class="tab active" data-tab="skins">🎨 Skins</button><button class="tab" data-tab="nitro">🔥 Nitro</button></div>
     <div id="shopCoins">💰 <span id="shopCoinsVal">0</span></div>
-    
-    <div id="skinsPanel" class="shop-panel active">
-      <div class="skin-grid" id="skinGrid"></div>
-    </div>
+    <div id="skinsPanel" class="shop-panel active"><div class="skin-grid" id="skinGrid"></div></div>
     <div id="nitroPanel" class="shop-panel hidden">
-      <div class="nitro-shop-card">
-        <h3>🔥 Pacote Nitro (x3)</h3>
-        <p>Ative com <b>Shift</b> para ganhar +40% de velocidade por 2.5s.</p>
-        <div class="price">300 💰</div>
-        <button id="buyNitro">COMPRAR</button>
-      </div>
+      <div class="nitro-shop-card"><h3>🔥 Pacote Nitro (x3)</h3><div class="price">300 💰</div><button id="buyNitro">COMPRAR</button></div>
     </div>
     <button id="closeShop">↩️ VOLTAR</button>
+  </div>
+
+  <!-- CONQUISTAS -->
+  <div id="achievements" class="screen hidden">
+    <h2>🏆 CONQUISTAS</h2>
+    <div id="achieveList" class="achieve-grid"></div>
+    <button id="closeAchieve">↩️ VOLTAR</button>
   </div>
 
   <!-- FIM DE JOGO -->
@@ -88,17 +86,10 @@
     <h2>🏁 CORRIDA FINALIZADA!</h2>
     <div class="result-card">
       <p>Tempo: <span id="finalTime">00:00.0</span></p>
-      <p>Veículo: <span id="finalVehicle">Carro</span></p>
-      <div id="rewards">
-        <p>💰 Base: <span id="rewardBase">0</span></p>
-        <p>🎯 Bônus: <span id="rewardBonus">0</span></p>
-        <p class="total">💵 Total: <span id="rewardTotal">0</span></p>
-      </div>
+      <p>Modo: <span id="finalMode">Normal</span></p>
+      <div id="rewards"><p>💰 Base: <span id="rewardBase">0</span> | 🎯 Bônus: <span id="rewardBonus">0</span></p><p class="total">💵 Total: <span id="rewardTotal">0</span></p></div>
     </div>
-    <div class="btn-group">
-      <button id="restartBtn">🔄 CORRER NOVAMENTE</button>
-      <button id="menuBtn">📋 MENU</button>
-    </div>
+    <div class="btn-group"><button id="restartBtn">🔄 CORRER NOVAMENTE</button><button id="menuBtn">📋 MENU</button></div>
   </div>
 
   <script src="index.js"></script>
